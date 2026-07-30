@@ -221,4 +221,6 @@ __marimo__/
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
 .vscode/settings.json
+
+#Database
 backend/super_inspections.db
