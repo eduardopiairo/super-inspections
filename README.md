@@ -11,6 +11,11 @@ A digital checklists and inspections platform inspired by [SafetyCulture](https:
 - **Roles & Permissions** — Manage access by organization, team, and role
 - **Audit Trail** — Every submission is timestamped and immutable
 
+## Concepts
+
+See [docs/](docs/) for how Templates, Inspections, Schedules, Actions, Users, and Sites fit
+together.
+
 ## Tech Stack
 
 > To be defined as the project evolves.
@@ -19,24 +24,46 @@ A digital checklists and inspections platform inspired by [SafetyCulture](https:
 
 ### Prerequisites
 
+- Python 3.12+
 - Node.js 20+
 - Git
 
-### Installation
+### Running locally
+
+Backend (FastAPI API):
 
 ```bash
-git clone https://github.com/eduardopiairo/super-inspections.git
-cd super-inspections
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+cp .env.example .env
+fastapi dev
+```
+
+API docs: http://localhost:8000/docs
+
+Frontend (in a separate terminal):
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
+
+The frontend dev server proxies API requests to the backend at `http://localhost:8000`, so both
+need to be running. See [backend/README.md](backend/README.md) and
+[frontend/README.md](frontend/README.md) for details, including how the frontend is built and
+served by the backend in production.
 
 ## Project Structure
 
 ```
 super-inspections/
 ├── .github/          # GitHub Actions & instructions
-└── ...               # App code (coming soon)
+├── docs/             # Concept documentation
+├── backend/          # FastAPI service
+└── frontend/         # Vite-based JS frontend
 ```
 
 ## Contributing

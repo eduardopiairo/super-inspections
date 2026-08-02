@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings · Super Inspections</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="/">Super Inspections</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="app-section">
+        <div class="container">
+          <a class="back-link" href="/">&larr; Back to app</a>
+          <div class="card">
+            <h2>Settings</h2>
+            <ul class="settings-options">
+              <li>
+                <a class="settings-option" href="/settings/users.html">
+                  <h3>Users</h3>
+                  <p>Create users and see who's already set up.</p>
+                </a>
+              </li>
+              <li>
+                <a class="settings-option" href="/settings/sites.html">
+                  <h3>Sites</h3>
+                  <p>Create sites and see which locations exist.</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span id="api-status">Checking API status…</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/settings.js"></script>
+  </body>
+</html>
