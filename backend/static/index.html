@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Inspections</title>
+    <script type="module" crossorigin src="/assets/index-C1lvzHFC.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DPHzxg1Q.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <span class="logo">Super Inspections</span>
+        <a class="btn btn-ghost" href="#create">Get started</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-inner">
+          <h1>Inspections, organized.</h1>
+          <p class="hero-subtitle">
+            Track every inspection from request to sign-off, in one place.
+          </p>
+          <a class="btn btn-primary" href="#create">Create an inspection</a>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container features-grid">
+          <div class="feature">
+            <h3>Create in seconds</h3>
+            <p>Log a new inspection with a title and get tracking immediately.</p>
+          </div>
+          <div class="feature">
+            <h3>Track status</h3>
+            <p>See what's pending, in progress, or complete at a glance.</p>
+          </div>
+          <div class="feature">
+            <h3>Built on FastAPI</h3>
+            <p>A fast, reliable API backs every request, with room to grow.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="create" class="app-section">
+        <div class="container app-grid">
+          <div class="card">
+            <h2>Create an inspection</h2>
+            <form id="inspection-form">
+              <label for="title">Title</label>
+              <input id="title" name="title" type="text" placeholder="e.g. 42 Elm Street roof inspection" required />
+              <button type="submit" class="btn btn-primary">Create inspection</button>
+              <p id="form-message" class="form-message"></p>
+            </form>
+          </div>
+
+          <div class="card">
+            <h2>Inspections</h2>
+            <ul id="inspection-list" class="inspection-list">
+              <li class="empty">Loading...</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span id="api-status">Checking API status…</span>
+      </div>
+    </footer>
+
+  </body>
+</html>
