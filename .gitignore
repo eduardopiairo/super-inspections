@@ -225,6 +225,7 @@ __marimo__/
 # Node / frontend
 node_modules/
 dist/
+.vite/
 
 #Database
 backend/super_inspections.db
