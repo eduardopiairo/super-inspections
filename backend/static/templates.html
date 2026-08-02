@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Templates · Super Inspections</title>
+    <script type="module" crossorigin src="/assets/templates-CNZRv3ui.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/style-CSI5vyXL.js">
+    <link rel="modulepreload" crossorigin href="/assets/api-DSQPQcdW.js">
+    <link rel="stylesheet" crossorigin href="/assets/style-Bz7FQRA8.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="/">Super Inspections</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="app-section">
+        <div class="container app-grid">
+          <div>
+            <a class="back-link" href="/">&larr; Back to app</a>
+            <div class="card">
+              <h2>Create a template</h2>
+              <form id="template-form">
+                <label for="template-title">Title</label>
+                <input id="template-title" type="text" placeholder="e.g. Kitchen Safety" required />
+
+                <label for="template-description">Description</label>
+                <input id="template-description" type="text" placeholder="Optional" />
+
+                <button type="submit" class="btn btn-primary">Create template</button>
+                <p id="template-form-message" class="form-message"></p>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Templates</h2>
+            <ul id="template-list" class="template-list">
+              <li class="empty">Loading...</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span id="api-status">Checking API status…</span>
+      </div>
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,1 @@
+import"./style-CSI5vyXL.js";const e=document.getElementById("api-status");fetch("/health").then(t=>t.json()).then(t=>{e.textContent=`API status: ${t.status}`}).catch(()=>{e.textContent="API unreachable."});
