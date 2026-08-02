@@ -13,3 +13,6 @@ app.include_router(inspections.router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+app.frontend("/", directory="static", fallback="index.html")

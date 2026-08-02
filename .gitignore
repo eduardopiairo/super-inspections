@@ -222,5 +222,9 @@ __marimo__/
 .github/instructions/codacy.instructions.md
 .vscode/settings.json
 
+# Node / frontend
+node_modules/
+dist/
+
 #Database
 backend/super_inspections.db
