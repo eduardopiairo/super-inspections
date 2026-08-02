@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inspections · Super Inspections</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="/">Super Inspections</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="app-section">
+        <div class="container app-grid">
+          <div>
+            <a class="back-link" href="/">&larr; Back to app</a>
+            <div class="card">
+              <h2>Create an inspection</h2>
+              <form id="inspection-form">
+                <label for="inspection-template">Template</label>
+                <select id="inspection-template" required>
+                  <option value="" disabled selected>Select a template…</option>
+                </select>
+
+                <label for="inspection-title">Title</label>
+                <input id="inspection-title" type="text" placeholder="e.g. 42 Elm Street roof inspection" required />
+
+                <button type="submit" class="btn btn-primary">Create inspection</button>
+                <p id="inspection-form-message" class="form-message"></p>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Inspections</h2>
+            <ul id="inspection-list" class="inspection-list">
+              <li class="empty">Loading...</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span id="api-status">Checking API status…</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/inspections.js"></script>
+  </body>
+</html>

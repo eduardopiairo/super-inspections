@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Actions · Super Inspections</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="/">Super Inspections</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="app-section">
+        <div class="container app-grid">
+          <div>
+            <a class="back-link" href="/">&larr; Back to app</a>
+            <div class="card">
+              <h2>Create an action</h2>
+              <form id="action-form">
+                <label for="action-description">Description</label>
+                <input id="action-description" type="text" placeholder="e.g. Replace fire extinguisher" required />
+
+                <label for="action-inspection">Inspection</label>
+                <select id="action-inspection">
+                  <option value="">Standalone (no inspection)</option>
+                </select>
+
+                <label for="action-site">Site</label>
+                <select id="action-site">
+                  <option value="">No site</option>
+                </select>
+
+                <label for="action-user">Assigned to</label>
+                <select id="action-user">
+                  <option value="">Unassigned</option>
+                </select>
+
+                <label for="action-frequency">Frequency</label>
+                <select id="action-frequency">
+                  <option value="once">Once</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+
+                <label for="action-due-date">Due date</label>
+                <input id="action-due-date" type="date" />
+
+                <button type="submit" class="btn btn-primary">Create action</button>
+                <p id="action-form-message" class="form-message"></p>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Actions</h2>
+            <ul id="action-list" class="action-list">
+              <li class="empty">Loading...</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span id="api-status">Checking API status…</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/actions.js"></script>
+  </body>
+</html>
