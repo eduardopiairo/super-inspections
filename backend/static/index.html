@@ -4,14 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Super Inspections</title>
-    <script type="module" crossorigin src="/assets/index-C1lvzHFC.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DPHzxg1Q.css">
+    <script type="module" crossorigin src="/assets/main-CN-x1MUZ.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/style-CSI5vyXL.js">
+    <link rel="stylesheet" crossorigin href="/assets/style-Bz7FQRA8.css">
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
         <span class="logo">Super Inspections</span>
-        <a class="btn btn-ghost" href="#create">Get started</a>
+        <nav class="header-nav">
+          <a href="/templates.html">Templates</a>
+          <a href="/inspections.html">Inspections</a>
+          <a href="/schedules.html">Schedules</a>
+          <a href="/actions.html">Actions</a>
+          <a class="btn btn-ghost" href="/settings.html">Settings</a>
+        </nav>
       </div>
     </header>
 
@@ -22,44 +29,30 @@
           <p class="hero-subtitle">
             Track every inspection from request to sign-off, in one place.
           </p>
-          <a class="btn btn-primary" href="#create">Create an inspection</a>
         </div>
       </section>
 
       <section class="features">
         <div class="container features-grid">
           <div class="feature">
-            <h3>Create in seconds</h3>
-            <p>Log a new inspection with a title and get tracking immediately.</p>
+            <h3>Templates</h3>
+            <p>Build reusable checklists once, with sections and questions.</p>
+            <a class="btn btn-primary" href="/templates.html">Create a template</a>
           </div>
           <div class="feature">
-            <h3>Track status</h3>
-            <p>See what's pending, in progress, or complete at a glance.</p>
+            <h3>Inspections</h3>
+            <p>Run a template and capture an answer for every question.</p>
+            <a class="btn btn-primary" href="/inspections.html">Create an inspection</a>
           </div>
           <div class="feature">
-            <h3>Built on FastAPI</h3>
-            <p>A fast, reliable API backs every request, with room to grow.</p>
+            <h3>Schedules</h3>
+            <p>Plan recurring or one-off inspections for a site or person.</p>
+            <a class="btn btn-primary" href="/schedules.html">Create a schedule</a>
           </div>
-        </div>
-      </section>
-
-      <section id="create" class="app-section">
-        <div class="container app-grid">
-          <div class="card">
-            <h2>Create an inspection</h2>
-            <form id="inspection-form">
-              <label for="title">Title</label>
-              <input id="title" name="title" type="text" placeholder="e.g. 42 Elm Street roof inspection" required />
-              <button type="submit" class="btn btn-primary">Create inspection</button>
-              <p id="form-message" class="form-message"></p>
-            </form>
-          </div>
-
-          <div class="card">
-            <h2>Inspections</h2>
-            <ul id="inspection-list" class="inspection-list">
-              <li class="empty">Loading...</li>
-            </ul>
+          <div class="feature">
+            <h3>Actions</h3>
+            <p>Track follow-ups from a failed answer, or raise one on the go.</p>
+            <a class="btn btn-primary" href="/actions.html">Create an action</a>
           </div>
         </div>
       </section>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users · Settings · Super Inspections</title>
+    <script type="module" crossorigin src="/assets/settings-users-CQPKSoJQ.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/style-CSI5vyXL.js">
+    <link rel="modulepreload" crossorigin href="/assets/api-DSQPQcdW.js">
+    <link rel="stylesheet" crossorigin href="/assets/style-Bz7FQRA8.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="/">Super Inspections</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="app-section">
+        <div class="container app-grid">
+          <div>
+            <a class="back-link" href="/settings.html">&larr; Settings</a>
+            <div class="card">
+              <h2>Create a user</h2>
+              <form id="user-form">
+                <label for="user-name">Name</label>
+                <input id="user-name" type="text" placeholder="e.g. Alice Smith" required />
+
+                <label for="user-email">Email</label>
+                <input id="user-email" type="email" placeholder="alice@example.com" required />
+
+                <button type="submit" class="btn btn-primary">Create user</button>
+                <p id="user-form-message" class="form-message"></p>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Users</h2>
+            <ul id="user-list" class="settings-list">
+              <li class="empty">Loading...</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <span id="api-status">Checking API status…</span>
+      </div>
+    </footer>
+
+  </body>
+</html>
