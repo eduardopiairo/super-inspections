@@ -11,6 +11,12 @@ dependencies = [
     "psycopg[binary]",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "httpx",
+]
+
 [tool.fastapi]
 entrypoint = "app.main:app"
 
