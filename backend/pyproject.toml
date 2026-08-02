@@ -8,6 +8,7 @@ dependencies = [
     "uvicorn[standard]",
     "sqlalchemy",
     "pydantic-settings",
+    "psycopg[binary]",
 ]
 
 [tool.fastapi]
