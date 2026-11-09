@@ -3,57 +3,51 @@
 How code gets from a developer's machine to production, and which tool does each stage.
 The diagrams are Mermaid, which GitHub renders in the browser.
 
-Solid arrows are automated. Dashed arrows are manual steps that are not automated yet (see
-[devops-checklist.md](./devops-checklist.md)).
+## General pipeline
 
-## End-to-end flow
+Four stages: Version Control, Continuous Integration, Artifact Management, Continuous Delivery.
 
 ```mermaid
 flowchart LR
-    dev["Developer<br/>VS Code + Git"] -->|push feature/**| gh[("GitHub<br/>repo")]
-    gh -->|open PR| pr{{"Pull request"}}
-
-    subgraph ci["Continuous integration - GitHub Actions"]
+    subgraph vc["1. Version Control"]
         direction TB
-        be["backend-ci.yml<br/>(on backend/** changes)<br/>Python 3.12, pip, pytest"]
-        fe["frontend-ci.yml: build-and-test<br/>(on frontend/** changes)<br/>Node 20, npm ci, npm test, vite build"]
+        git["Git + GitHub<br/>feature/** branch, PR, merge to main"]
     end
 
-    gh --> ci
-    pr --> ci
-    ci -->|checks pass| merge["Review + merge to main"]
-    merge --> gh
-
-    subgraph cdfe["Frontend CD - GitHub Actions, main only"]
+    subgraph ci["2. Continuous Integration"]
         direction TB
-        art["Artifact: frontend-dist<br/>(upload-artifact)"]
-        dep["deploy job<br/>environment: production<br/>netlify-cli deploy --prod"]
-        art --> dep
+        cibuild["GitHub Actions<br/>install, test, build"]
     end
 
-    fe -.->|on main| art
-    dep --> netlify["Netlify CDN<br/>static frontend"]
+    subgraph am["3. Artifact Management"]
+        direction TB
+        store["GitHub Actions artifacts<br/>frontend-dist (7 days)"]
+    end
 
-    merge -. "manual: fastapi deploy" .-> fcloud["FastAPI Cloud<br/>FastAPI backend"]
-    fcloud --> neon[("Neon<br/>Postgres")]
+    subgraph cd["4. Continuous Delivery"]
+        direction TB
+        fe["Netlify CLI<br/>frontend, automated on main"]
+        be["FastAPI Cloud CLI<br/>backend, manual"]
+        db[("Neon Postgres")]
+        be --> db
+    end
 
-    netlify -->|"HTTPS, VITE_API_URL"| fcloud
+    vc -->|push / PR| ci
+    ci -->|frontend build| am
+    am -->|main only| fe
+    ci -.->|source, no artifact| be
 ```
+
+Solid arrows are automated. Dashed arrows are manual steps (see [devops-checklist.md](./devops-checklist.md)).
 
 ## Stages and tools
 
-| Stage | Trigger | Tool | What happens |
-|---|---|---|---|
-| Code | local | Git, VS Code | Work on a `feature/**` branch |
-| Source | push, PR | GitHub | Hosts the repo and runs the checks |
-| Backend CI | `backend/**` change on push or PR | GitHub Actions | Set up Python 3.12, `pip install -e ".[test]"`, `pytest` |
-| Frontend CI | `frontend/**` change on push or PR | GitHub Actions | Set up Node 20, `npm ci`, `npm test --if-present`, `npm run build` |
-| Package | after frontend build | GitHub Actions artifacts | `frontend/dist` is stored as `frontend-dist` for 7 days |
-| Frontend CD | push to `main`, CI green | GitHub Actions + Netlify CLI | The `production` environment job downloads the artifact and deploys it |
-| Frontend host | after deploy | Netlify | Serves the static files from its CDN |
-| Backend CD | manual | FastAPI Cloud CLI | `fastapi deploy` from `backend/` |
-| Backend host | after deploy | FastAPI Cloud | Runs the API, with `DATABASE_URL` and `CORS_ORIGINS` set in its settings |
-| Database | runtime | Neon | Serverless Postgres, reached through the pooled connection string |
+| Stage | Tools | What happens |
+|---|---|---|
+| 1. Version Control | Git, GitHub | Work on a `feature/**` branch, open a PR, review, merge to `main` |
+| 2. Continuous Integration | GitHub Actions | Backend: Python 3.12, `pip install`, `pytest`. Frontend: Node 20, `npm ci`, `npm test`, `npm run build`. Each runs only when its folder changes |
+| 3. Artifact Management | GitHub Actions artifacts | The frontend build (`frontend/dist`) is stored as `frontend-dist` for 7 days. The backend has no artifact, since FastAPI Cloud takes the source |
+| 4. Continuous Delivery | Netlify CLI, FastAPI Cloud CLI, Neon | Frontend deploys from `main` through the `production` environment. Backend deploys by hand with `fastapi deploy`. The backend reads `DATABASE_URL` from Neon |
 
 ## Frontend workflow in detail
 
