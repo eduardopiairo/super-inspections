@@ -3,8 +3,10 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.config import settings
 
-connect_args = {"check_same_thread": False} if "sqlite" in settings.database_url else {}
-engine = create_engine(settings.database_url, connect_args=connect_args)
+url = settings.sqlalchemy_url
+connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
+# pool_pre_ping: Neon suspends idle compute and drops connections.
+engine = create_engine(url, connect_args=connect_args, pool_pre_ping=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
