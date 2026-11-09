@@ -15,6 +15,7 @@ dependencies = [
 test = [
     "pytest",
     "httpx",
+    "pytest-cov",
 ]
 
 [tool.fastapi]
