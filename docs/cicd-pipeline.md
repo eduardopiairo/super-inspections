@@ -1,105 +1,101 @@
 # CI/CD pipeline
 
-How code gets from a developer's machine to production, and which tool does each stage.
-The diagrams are Mermaid, which GitHub renders in the browser.
+How code gets from a developer's machine to production. The frontend and backend each have their own
+pipeline, and both follow the same four stages: Version Control, Continuous Integration, Artifact
+Management and Continuous Delivery. The diagrams are Mermaid, which GitHub renders in the browser.
 
-## General pipeline
+Solid arrows are automated. Dashed arrows are manual steps (see [devops-checklist.md](./devops-checklist.md)).
 
-Four stages: Version Control, Continuous Integration, Artifact Management, Continuous Delivery.
+## Frontend pipeline
+
+Workflow: [frontend-ci.yml](../.github/workflows/frontend-ci.yml). Runs only when `frontend/**` changes.
 
 ```mermaid
 flowchart LR
     subgraph vc["1. Version Control"]
         direction TB
-        git["Git + GitHub<br/>feature/** branch, PR, merge to main"]
+        git["Git + GitHub<br/>feature/** branch, PR<br/>merge to main"]
     end
 
-    subgraph ci["2. Continuous Integration"]
+    subgraph ci["2. Continuous Integration<br/>job: build-and-test"]
         direction TB
-        cibuild["GitHub Actions<br/>install, test, build"]
+        c1["setup-node 20<br/>npm ci (cached)"] --> c2["npm test --if-present"]
+        c2 --> c3["npm run build (Vite)<br/>VITE_API_URL"]
     end
 
     subgraph am["3. Artifact Management"]
         direction TB
-        store["GitHub Actions artifacts<br/>frontend-dist (7 days)"]
+        store["GitHub Actions artifacts<br/>frontend-dist, 7 days"]
     end
 
-    subgraph cd["4. Continuous Delivery"]
+    subgraph cd["4. Continuous Delivery<br/>job: deploy"]
         direction TB
-        fe["Netlify CLI<br/>frontend, automated on main"]
-        be["FastAPI Cloud CLI<br/>backend, manual"]
-        db[("Neon Postgres")]
-        be --> db
+        g{"push to main?"} -- yes --> d1["environment: production<br/>netlify deploy --prod --no-build"]
+        d1 --> live(["Netlify CDN"])
     end
 
     vc -->|push / PR| ci
-    ci -->|frontend build| am
-    am -->|main only| fe
-    ci -.->|source, no artifact| be
+    ci -->|upload-artifact| am
+    am -->|download-artifact| g
 ```
-
-Solid arrows are automated. Dashed arrows are manual steps (see [devops-checklist.md](./devops-checklist.md)).
-
-## Stages and tools
 
 | Stage | Tools | What happens |
 |---|---|---|
 | 1. Version Control | Git, GitHub | Work on a `feature/**` branch, open a PR, review, merge to `main` |
-| 2. Continuous Integration | GitHub Actions | Backend: Python 3.12, `pip install`, `pytest`. Frontend: Node 20, `npm ci`, `npm test`, `npm run build`. Each runs only when its folder changes |
-| 3. Artifact Management | GitHub Actions artifacts | The frontend build (`frontend/dist`) is stored as `frontend-dist` for 7 days. The backend has no artifact, since FastAPI Cloud takes the source |
-| 4. Continuous Delivery | Netlify CLI, FastAPI Cloud CLI, Neon | Frontend deploys from `main` through the `production` environment. Backend deploys by hand with `fastapi deploy`. The backend reads `DATABASE_URL` from Neon |
+| 2. Continuous Integration | GitHub Actions, Node 20, npm, Vite | Install from the lockfile, run tests if a `test` script exists, build with `VITE_API_URL` baked in |
+| 3. Artifact Management | GitHub Actions artifacts | `frontend/dist` is stored as `frontend-dist` for 7 days, and the deploy job uses that same build |
+| 4. Continuous Delivery | Netlify CLI, Netlify | On a push to `main`, deploy to production using `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`. PRs and feature branches stop after CI |
 
-## Frontend workflow in detail
+## Backend pipeline
 
-```mermaid
-flowchart TB
-    t["Trigger<br/>push to main / feature/**, or PR<br/>paths: frontend/**"] --> c["concurrency:<br/>cancel superseded runs"]
-    c --> j1
-
-    subgraph j1["Job: build-and-test"]
-        direction TB
-        s1["checkout"] --> s2["setup-node 20 + npm cache"]
-        s2 --> s3["npm ci"]
-        s3 --> s4["npm test --if-present"]
-        s4 --> s5["npm run build<br/>VITE_API_URL from repo variable"]
-        s5 --> s6["upload-artifact frontend-dist"]
-    end
-
-    j1 --> g{"push to main?"}
-    g -- no --> stop(["stop: PRs and feature branches never deploy"])
-    g -- yes --> j2
-
-    subgraph j2["Job: deploy - environment: production"]
-        direction TB
-        d1["checkout"] --> d2["download-artifact frontend-dist"]
-        d2 --> d3["netlify deploy --prod --no-build<br/>NETLIFY_AUTH_TOKEN, NETLIFY_SITE_ID"]
-    end
-
-    j2 --> live(["Live on Netlify"])
-```
-
-## Backend workflow in detail
+Workflow: [backend-ci.yml](../.github/workflows/backend-ci.yml). Runs only when `backend/**` changes.
 
 ```mermaid
-flowchart TB
-    t["Trigger<br/>push to main / feature/**, or PR<br/>paths: backend/**"] --> j
-
-    subgraph j["Job: build-and-test"]
+flowchart LR
+    subgraph vc["1. Version Control"]
         direction TB
-        s1["checkout"] --> s2["setup-python 3.12 + pip cache"]
-        s2 --> s3["pip install -e '.[test]'"]
-        s3 --> s4["pytest -v<br/>SQLite test DB"]
+        git["Git + GitHub<br/>feature/** branch, PR<br/>merge to main"]
     end
 
-    j --> done(["Checks reported on the PR"])
-    done -.->|manual| m["fastapi deploy"]
-    m --> live(["Live on FastAPI Cloud, using Neon Postgres"])
+    subgraph ci["2. Continuous Integration<br/>job: build-and-test"]
+        direction TB
+        c1["setup-python 3.12<br/>pip install -e '.[test]' (cached)"] --> c2["pytest -v<br/>SQLite test DB"]
+    end
+
+    subgraph am["3. Artifact Management"]
+        direction TB
+        store["None<br/>FastAPI Cloud takes the source"]
+    end
+
+    subgraph cd["4. Continuous Delivery"]
+        direction TB
+        d1["fastapi deploy<br/>manual, from backend/"] --> live(["FastAPI Cloud"])
+        live --> db[("Neon Postgres<br/>DATABASE_URL")]
+    end
+
+    vc -->|push / PR| ci
+    ci -.->|source| am
+    am -.-> d1
 ```
 
-## Gaps this diagram shows
+| Stage | Tools | What happens |
+|---|---|---|
+| 1. Version Control | Git, GitHub | Same flow as the frontend |
+| 2. Continuous Integration | GitHub Actions, Python 3.12, pip, pytest | Install with the `test` extra, run the test suite against SQLite |
+| 3. Artifact Management | none | There is no build output. FastAPI Cloud builds from the source in `backend/` |
+| 4. Continuous Delivery | FastAPI Cloud CLI, FastAPI Cloud, Neon | A person runs `fastapi deploy`. The running app reads `DATABASE_URL` and `CORS_ORIGINS` from FastAPI Cloud settings and connects to Neon |
 
-- The backend has no automated deploy, so the dashed arrow is a person running a command.
+## Gaps
+
+**Frontend**
+- No lint step, and no tests yet.
+- No preview deploys for PRs, and no check after deploy that the site loads.
+
+**Backend**
+- No automated deploy, so a person runs the command.
+- No migration step. The app creates tables on startup, and tests run on SQLite while production runs Postgres.
+- No check after deploy that `/health` responds.
+
+**Across both**
 - Nothing orders the two deploys. If an API change and a frontend change merge together, the frontend can
   go live before the backend is ready.
-- There is no step after deploy that checks the site is up.
-- There is no migration step. The app creates tables on startup.
