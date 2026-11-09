@@ -1,6 +1,7 @@
+import { apiFetch } from "./api.js";
 const apiStatus = document.getElementById("api-status");
 
-fetch("/health")
+apiFetch("/health")
   .then((res) => res.json())
   .then((data) => {
     apiStatus.textContent = `API status: ${data.status}`;

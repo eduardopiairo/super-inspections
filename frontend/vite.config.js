@@ -4,8 +4,9 @@ import { defineConfig } from "vite";
 const root = fileURLToPath(new URL(".", import.meta.url));
 
 export default defineConfig({
+  envPrefix: "BACKEND_",
   build: {
-    outDir: "../backend/static",
+    outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {
       input: {
