@@ -265,7 +265,7 @@ body {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
   gap: 8px;
 }
 
@@ -303,7 +303,7 @@ body {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
   gap: 8px;
 }
 
@@ -374,7 +374,7 @@ body {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
   gap: 16px;
 }
 
@@ -439,12 +439,6 @@ body {
   text-align: center;
 }
 
-@media (max-width: 560px) {
-  .dialog-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Footer */
 
 .site-footer {
@@ -462,6 +456,117 @@ body {
 
   .hero h1 {
     font-size: 2.25rem;
+  }
+}
+
+/* Mobile */
+
+.app-grid > *,
+.card {
+  min-width: 0;
+}
+
+.inspection-list li,
+.template-title,
+.list-item-title,
+.list-item-meta {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  /* Nav drops under the logo and scrolls sideways instead of overflowing. */
+  .header-nav {
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 -16px;
+    padding: 0 16px 2px;
+    width: calc(100% + 32px);
+  }
+
+  .header-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-nav a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 8px 10px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .hero {
+    padding: 56px 0 40px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+  }
+
+  .features {
+    padding: 40px 0;
+  }
+
+  .features-grid {
+    gap: 24px;
+  }
+
+  .feature .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .app-section {
+    padding: 24px 0 56px;
+  }
+
+  .card {
+    padding: 20px 16px;
+    border-radius: 10px;
+  }
+
+  .back-link {
+    padding: 10px 0;
+    margin-bottom: 4px;
+  }
+
+  /* 16px+ stops iOS Safari zooming the page when a field is focused. */
+  .card form input,
+  .card form select {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  .card form button {
+    align-self: stretch;
+    min-height: 44px;
+    text-align: center;
+  }
+
+  .inspection-list li {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .settings-option {
+    padding: 16px;
+  }
+
+  .site-footer {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
   }
 }
 

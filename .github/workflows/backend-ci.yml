@@ -1,4 +1,4 @@
-name: super-inspections-ci
+name: super-inspections-backend-cicd
 
 on:
   push:
