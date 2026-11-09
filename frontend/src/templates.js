@@ -1,4 +1,4 @@
-import { fetchJson, postJson, renderEmpty, setFormMessage } from "./api.js";
+import { fetchJson, postJson, renderEmpty, setFormMessage, apiFetch } from "./api.js";
 
 const apiStatus = document.getElementById("api-status");
 const templateList = document.getElementById("template-list");
@@ -56,7 +56,7 @@ templateForm.addEventListener("submit", async (event) => {
   }
 });
 
-fetch("/health")
+apiFetch("/health")
   .then((res) => res.json())
   .then((data) => {
     apiStatus.textContent = `API status: ${data.status}`;

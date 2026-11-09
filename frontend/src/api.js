@@ -1,11 +1,17 @@
+const API_URL = (import.meta.env.BACKEND_API_URL ?? "").replace(/\/$/, "");
+
+export function apiFetch(path, options) {
+  return fetch(`${API_URL}${path}`, options);
+}
+
 export async function fetchJson(path) {
-  const res = await fetch(path);
+  const res = await apiFetch(path);
   if (!res.ok) throw new Error(`Request to ${path} failed`);
   return res.json();
 }
 
 export async function postJson(path, body) {
-  const res = await fetch(path, {
+  const res = await apiFetch(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
