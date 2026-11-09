@@ -15,15 +15,30 @@ check() { if eval "$2" >/dev/null 2>&1; then pass "$1"; else bad "$1"; fi; }
 echo "Auditing $REPO (branch: $BRANCH)"
 
 echo; echo "1. Source control"
-if ! prot=$(gh api "repos/$REPO/branches/$BRANCH/protection" 2>/dev/null); then
-  bad "$BRANCH has branch protection"
+# Protection can come from classic branch protection or from repository rulesets; check both.
+rules=$(gh api "repos/$REPO/rules/branches/$BRANCH" 2>/dev/null || echo '[]')
+if prot=$(gh api "repos/$REPO/branches/$BRANCH/protection" 2>/dev/null); then
+  classic=true
 else
-  pass "$BRANCH has branch protection"
-  check "pull request reviews required" "echo '$prot' | jq -e '.required_pull_request_reviews'"
-  check "required status checks configured" "echo '$prot' | jq -e '.required_status_checks.contexts | length > 0'"
-  check "force pushes blocked" "echo '$prot' | jq -e '.allow_force_pushes.enabled == false'"
-  check "branch deletion blocked" "echo '$prot' | jq -e '.allow_deletions.enabled == false'"
+  classic=false; prot='{}'
 fi
+nrules=$(echo "$rules" | jq 'length')
+if [ "$classic" = true ] || [ "$nrules" -gt 0 ]; then
+  pass "$BRANCH is protected (classic: $classic, ruleset rules: $nrules)"
+else
+  bad "$BRANCH is protected"
+fi
+has_rule() { echo "$rules" | jq -e --arg t "$1" 'map(.type) | index($t)' >/dev/null 2>&1; }
+check "pull request required" \
+  "has_rule pull_request || echo '$prot' | jq -e '.required_pull_request_reviews'"
+check "required status checks configured" \
+  "has_rule required_status_checks || echo '$prot' | jq -e '.required_status_checks.contexts | length > 0'"
+check "force pushes blocked" \
+  "has_rule non_fast_forward || echo '$prot' | jq -e '.allow_force_pushes.enabled == false'"
+check "branch deletion blocked" \
+  "has_rule deletion || echo '$prot' | jq -e '.allow_deletions.enabled == false'"
+check "stale approvals dismissed on new commits" \
+  "echo '$rules' | jq -e 'map(select(.type==\"pull_request\")) | .[0].parameters.dismiss_stale_reviews_on_push == true' || echo '$prot' | jq -e '.required_pull_request_reviews.dismiss_stale_reviews == true'"
 
 echo; echo "2. Secrets, variables and environments"
 secrets=$(gh secret list -R "$REPO" 2>/dev/null | cut -f1)

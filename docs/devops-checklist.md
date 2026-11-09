@@ -14,10 +14,10 @@ Stack: Netlify (frontend), FastAPI Cloud (backend), Neon (Postgres), GitHub Acti
 
 | | Item | Status |
 |---|---|---|
-| ☐ | `main` is protected: no direct pushes, PR required | ❌ audit: not protected |
-| ☐ | Required status checks (backend + frontend CI) must pass before merge | ❌ |
-| ☐ | At least one review is required, and stale approvals are dismissed on new commits | ❌ |
-| ☐ | Force-push and branch deletion are blocked on `main` | ❌ |
+| ☐ | `main` is protected: no direct pushes, PR required | ✅ ruleset `protect-default-branch` (repo admins can bypass) |
+| ☐ | Required status checks (backend + frontend CI) must pass before merge | ❌ ruleset has no required checks |
+| ☐ | At least one review is required, and stale approvals are dismissed on new commits | ✅ 1 approval required; ❌ stale approvals not dismissed |
+| ☐ | Force-push and branch deletion are blocked on `main` | ✅ |
 | ☐ | Commits are small and focused, and the PR describes what changed and why | ✅ |
 | ☐ | `.gitignore` covers `.env`, `node_modules`, `dist`, `.venv` and local DB files | ✅ |
 
