@@ -56,6 +56,19 @@ need to be running. See [backend/README.md](backend/README.md) and
 [frontend/README.md](frontend/README.md) for details, including how the frontend is built and
 served by the backend in production.
 
+### Secret scanning (pre-commit)
+
+A [gitleaks](https://github.com/gitleaks/gitleaks) hook blocks commits that contain secrets. Install it
+once per clone:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+Do not bypass it with `--no-verify`. If a secret was committed or pushed, rotate it, since removing the
+commit does not make it safe again.
+
 ## Project Structure
 
 ```
